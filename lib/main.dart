@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:site_crawling_app/doda/doda.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:site_crawling_app/doda/presentation/doda_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
