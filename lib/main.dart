@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:site_crawling_app/screen/green_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -46,7 +52,12 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text('doda'),
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const GreenScreen()),
+                );
+              },
               child: const Text('リクナビ'),
             ),
           ],
