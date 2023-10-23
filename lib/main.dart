@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:site_crawling_app/doda.dart';
+import 'package:site_crawling_app/doda/doda.dart';
 
 void main() {
   runApp(const MyApp());
