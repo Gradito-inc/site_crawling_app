@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:site_crawling_app/doda/presentation/common/doda_loading.dart';
 import 'package:site_crawling_app/doda/presentation/doda_controller.dart';
+import 'package:site_crawling_app/services/write_to_spreadsheet.dart';
 
 class DodaPage extends HookConsumerWidget {
   const DodaPage({super.key});
@@ -66,6 +67,13 @@ class DodaPage extends HookConsumerWidget {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => writeToSpreadsheet(
+          siteType: SiteType.doda,
+          companyList: companies.value,
+        ),
+        child: const Icon(Icons.edit_square),
+      ),
       body: isLoading
           ? const Center(
               child: Column(
@@ -81,7 +89,7 @@ class DodaPage extends HookConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '企業数： ${companies.value.length}',
+                  '求人数： ${companies.value.length}',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
