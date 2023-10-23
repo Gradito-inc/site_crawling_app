@@ -22,13 +22,24 @@ class DodaRepositoryImpl implements DodaRepository {
   // キーワード一致した求人情報リスト(企業名)を取得する
   @override
   Future<List<String>> fetchData(String keyword) async {
-    final response = await http.get(Uri.parse(DodaParse.initialUrl));
+    // 企業名リスト
+    final companyNames = <String>[];
+
+    final result = await _getCompanies(DodaParse.initialUrl, keyword);
+    companyNames.addAll(result);
+
+    return companyNames;
+  }
+
+  // 1ページごとに企業名リストを取得する
+  Future<List<String>> _getCompanies(String url, String keyword) async {
+    final companyNames = <String>[];
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       final document = parse(response.body);
       // 企業情報リスト
       final companies = document.querySelectorAll('.layout');
-      // 企業名リスト
-      final companyNames = <String>[];
+
       // 企業ごとに抽出を行う
       for (final company in companies) {
         // 企業IDを抽出する
@@ -50,31 +61,33 @@ class DodaRepositoryImpl implements DodaRepository {
           }
         }
       }
-      return companyNames;
+
+      // 次ページがあるかどうか
+      final nextBtn = document.querySelector('.btn_r.last');
+      final nextUrl = nextBtn?.querySelector('a')?.attributes['href'];
+      if (nextUrl != null) {
+        final result = await _getCompanies(nextUrl, keyword);
+        companyNames.addAll(result);
+      }
     } else {
       log('Failed to load data');
-      return [];
     }
+    return companyNames;
   }
 
   // 企業情報がキーワードにマッチするか判定する
   Future<bool> _containsKeyword(String id, String keyword) async {
-    try {
-      final response = await http.get(Uri.parse(DodaParse.getDetailUrl(id)));
-      log('text : ${DodaParse.getDetailUrl(id)}');
-      if (response.statusCode == 200) {
-        final document = parse(response.body);
-        // 企業情報テキスト
-        final contentText =
-            document.querySelector('.recruitment_area')?.text ?? '';
+    final response = await http.get(Uri.parse(DodaParse.getDetailUrl(id)));
+    log('text : ${DodaParse.getDetailUrl(id)}');
+    if (response.statusCode == 200) {
+      final document = parse(response.body);
+      // 企業情報テキスト
+      final contentText =
+          document.querySelector('.recruitment_area')?.text ?? '';
 
-        return contentText.contains(keyword);
-      } else {
-        log('Failed to load data');
-        return false;
-      }
-    } on Exception catch (e) {
-      log('Error: $e');
+      return contentText.contains(keyword);
+    } else {
+      log('Failed to load data');
       return false;
     }
   }

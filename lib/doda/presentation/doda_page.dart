@@ -77,10 +77,23 @@ class DodaPage extends HookConsumerWidget {
                 ],
               ),
             )
-          : Center(
-              child: ListView(
-                children: companies.value.map(Text.new).toList(),
-              ),
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '企業数： ${companies.value.length}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: ListView(
+                    children: companies.value.map(Text.new).toList(),
+                  ),
+                ),
+              ],
             ),
     );
   }
