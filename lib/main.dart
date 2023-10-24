@@ -55,10 +55,11 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 Navigator.push(
                   context,
+                  // ignore: inference_failure_on_instance_creation
                   MaterialPageRoute(builder: (context) => const GreenScreen()),
                 );
               },
-              child: const Text('リクナビ'),
+              child: const Text('Green'),
             ),
           ],
         ),
