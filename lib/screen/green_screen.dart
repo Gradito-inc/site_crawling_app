@@ -9,27 +9,47 @@ import '../services/write_to_spreadsheet.dart';
 
 final searchProvider = FutureProvider.autoDispose.family<List<String>, String>(
   (ref, query) async {
-    final urlString = 'https://www.green-japan.com/search_key?keyword=$query';
-    final url = Uri.parse(urlString);
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      final document = parse(response.body);
-      final companyNames = <String>[];
-      for (final element in document.querySelectorAll('h3')) {
-        final text = element.text;
-        if (text.contains('株式会社')) {
-          companyNames.add(text);
+    final urls = [
+      http.get(
+          Uri.parse('https://www.green-japan.com/search_key?keyword=$query')),
+      http.get(Uri.parse(
+          'https://www.green-japan.com/search_key?keyword=$query&page=2')),
+      http.get(Uri.parse(
+          'https://www.green-japan.com/search_key?keyword=$query&page=3')),
+      http.get(Uri.parse(
+          'https://www.green-japan.com/search_key?keyword=$query&page=4')),
+      http.get(Uri.parse(
+          'https://www.green-japan.com/search_key?keyword=$query&page=5')),
+      http.get(Uri.parse(
+          'https://www.green-japan.com/search_key?keyword=$query&page=6')),
+      http.get(Uri.parse(
+          'https://www.green-japan.com/search_key?keyword=$query&page=7')),
+      http.get(Uri.parse(
+          'https://www.green-japan.com/search_key?keyword=$query&page=8')),
+      http.get(Uri.parse(
+          'https://www.green-japan.com/search_key?keyword=$query&page=9')),
+      http.get(Uri.parse(
+          'https://www.green-japan.com/search_key?keyword=$query&page=10')),
+    ];
+
+    final responses = await Future.wait(urls);
+    final companyNames = <String>[];
+
+    for (final response in responses) {
+      if (response.statusCode == 200) {
+        final document = parse(response.body);
+        final companyList = <String>[];
+        for (final element in document.querySelectorAll('h3')) {
+          final text = element.text;
+          if (text.contains('株式会社')) {
+            companyList.add(text);
+          }
         }
+        companyNames.addAll(companyList);
+        await writeToSpreadsheet(siteType: SiteType.green, companyList: companyList);
       }
-      unawaited(
-        writeToSpreadsheet(
-          siteType: SiteType.green,
-          companyList: companyNames,
-        ),
-      );
-      return companyNames;
     }
-    return [''];
+    return companyNames;
   },
 );
 
