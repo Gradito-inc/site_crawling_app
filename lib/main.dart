@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:site_crawling_app/screen/green_screen.dart';
 import 'package:site_crawling_app/doda/presentation/doda_page.dart';
 
 void main() {
@@ -57,8 +58,14 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text('doda'),
             ),
             ElevatedButton(
-              onPressed: () {},
-              child: const Text('リクナビ'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  // ignore: inference_failure_on_instance_creation
+                  MaterialPageRoute(builder: (context) => const GreenScreen()),
+                );
+              },
+              child: const Text('Green'),
             ),
           ],
         ),
