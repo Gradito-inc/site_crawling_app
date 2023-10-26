@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:site_crawling_app/screen/green_screen.dart';
+import 'package:site_crawling_app/doda/presentation/doda_page.dart';
 
 void main() {
   runApp(
@@ -48,7 +49,12 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push<void>(
+                  context,
+                  MaterialPageRoute(builder: (context) => const DodaPage()),
+                );
+              },
               child: const Text('doda'),
             ),
             ElevatedButton(
