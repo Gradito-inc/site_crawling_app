@@ -1,17 +1,24 @@
 # site_crawling_app
 
-A new Flutter project.
+以下の求人サイトでキーワード検索した企業を取得し、スプレッドシートへ転記することができます。
 
-## Getting Started
+- Doda
+- Green
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+※スプレッドシートへ転記する場合、以下の対応が必要。
+envファイルを格納などの対応が必要なため、小駒もしくは北山へ連絡ください。
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Doda
+キーワードで検索すると、企業名一覧が表示。（取得に数十秒かかります）
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# site_crawling_app
+右下ボタンを押下でスプレッドシートへ転記。
+
+https://github.com/Gradito-inc/site_crawling_app/assets/80618807/99817df4-16ad-4c4e-a604-83c35a815589
+
+
+
+
+
+
+
