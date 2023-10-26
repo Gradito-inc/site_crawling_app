@@ -14,6 +14,9 @@ envファイルを格納などの対応が必要なため、小駒もしくは�
 
 右下ボタンを押下でスプレッドシートへ転記。
 
+https://github.com/Gradito-inc/site_crawling_app/assets/80618807/99817df4-16ad-4c4e-a604-83c35a815589
+
+
 
 
 
