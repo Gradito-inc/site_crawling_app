@@ -1,6 +1,7 @@
 # site_crawling_app
 
-以下の求人サイトでキーワード検索した企業を取得し、スプレッドシートへ転記することができます。
+以下の求人サイトでキーワード検索した企業を取得し、[スプレッドシート](https://docs.google.com/spreadsheets/d/1g7vSF3fKc9KY7uQLQqXnsI-cJ43QijVScNI5lM9nujE/edit#gid=1852003612)
+へ転記することができます。
 
 - Doda
 - Green
