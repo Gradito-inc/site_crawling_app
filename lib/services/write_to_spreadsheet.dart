@@ -44,7 +44,8 @@ Future<void> writeToSpreadsheet({required SiteType siteType, required List<Strin
 
   // 記載済みの値を削除する
   if (values != null) {
-    final existingCompanies = values.map((row) => row[0]).toSet();
+    // ignore: lines_longer_than_80_chars
+    final existingCompanies = values.where((row) => row.isNotEmpty && row[0] != null).map((row) => row[0]).toSet();
     companyList.removeWhere(existingCompanies.contains);
   }
 

@@ -5,53 +5,91 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import '../services/write_to_spreadsheet.dart';
 
 final searchProvider = FutureProvider.autoDispose.family<List<String>, String>(
-  (ref, query) async {
-    final urls = [
-      http.get(
-          Uri.parse('https://www.green-japan.com/search_key?keyword=$query')),
-      http.get(Uri.parse(
-          'https://www.green-japan.com/search_key?keyword=$query&page=2')),
-      http.get(Uri.parse(
-          'https://www.green-japan.com/search_key?keyword=$query&page=3')),
-      http.get(Uri.parse(
-          'https://www.green-japan.com/search_key?keyword=$query&page=4')),
-      http.get(Uri.parse(
-          'https://www.green-japan.com/search_key?keyword=$query&page=5')),
-      http.get(Uri.parse(
-          'https://www.green-japan.com/search_key?keyword=$query&page=6')),
-      http.get(Uri.parse(
-          'https://www.green-japan.com/search_key?keyword=$query&page=7')),
-      http.get(Uri.parse(
-          'https://www.green-japan.com/search_key?keyword=$query&page=8')),
-      http.get(Uri.parse(
-          'https://www.green-japan.com/search_key?keyword=$query&page=9')),
-      http.get(Uri.parse(
-          'https://www.green-japan.com/search_key?keyword=$query&page=10')),
-    ];
+  (ref, keyword) async {
+    const tokyo = 'key=8syc6rza0fz6n3zko4hw';
+    const kanagawa = 'key=dmapq71capkeg45zvgyp';
+    const chiba = 'key=rr6emffiqqg06s5usioz';
+    const saitama = 'key=okg8k28ujmfsw4ixefiz';
 
-    final responses = await Future.wait(urls);
-    final companyNames = <String>[];
+    final tokyoUrls = _getUrls(prefecture: tokyo, keyword: keyword);
+    final kanagawaUrls = _getUrls(prefecture: kanagawa, keyword: keyword);
+    final chibaUrls = _getUrls(prefecture: chiba, keyword: keyword);
+    final saitamaUrls = _getUrls(prefecture: saitama, keyword: keyword);
 
-    for (final response in responses) {
-      if (response.statusCode == 200) {
-        final document = parse(response.body);
-        final companyList = <String>[];
-        for (final element in document.querySelectorAll('h3')) {
-          final text = element.text;
-          if (text.contains('株式会社')) {
-            companyList.add(text);
-          }
-        }
-        companyNames.addAll(companyList);
-        await writeToSpreadsheet(siteType: SiteType.green, companyList: companyList);
-      }
-    }
-    return companyNames;
+    final companyList = <String>[];
+
+    final tokyoCompanyList = await _fetchResponse(urls: tokyoUrls);
+    companyList.addAll(tokyoCompanyList);
+    final kanagawaCompanyList = await _fetchResponse(urls: kanagawaUrls);
+    companyList.addAll(kanagawaCompanyList);
+    final chibaCompanyList = await _fetchResponse(urls: chibaUrls);
+    companyList.addAll(chibaCompanyList);
+    final saitamaCompanyList = await _fetchResponse(urls: saitamaUrls);
+    companyList.addAll(saitamaCompanyList);
+
+    return companyList;
   },
 );
+
+Future<List<String>> _fetchResponse({required List<Future<Response>> urls}) async {
+  final responses = await Future.wait(urls);
+  final companyList = <String>[];
+
+  for (final response in responses) {
+    if (response.statusCode == 200) {
+      final document = parse(response.body);
+      for (final element in document.querySelectorAll('h3')) {
+        final text = element.text;
+        if (text.contains('株式会社')) {
+          companyList.add(text);
+        }
+      }
+      // ignore: lines_longer_than_80_chars
+      await writeToSpreadsheet(siteType: SiteType.green, companyList: companyList);
+    }
+  }
+  return companyList;
+}
+
+List<Future<Response>> _getUrls(
+    {required String prefecture, required String keyword}) {
+  return [
+    http.get(Uri.parse(
+        'https://www.green-japan.com/search_key?$prefecture&keyword=$keyword')),
+    http.get(Uri.parse(
+        'https://www.green-japan.com/search_key?$prefecture&keyword=$keyword&page=2')),
+    http.get(Uri.parse(
+        'https://www.green-japan.com/search_key?$prefecture&keyword=$keyword&page=3')),
+    http.get(Uri.parse(
+        'https://www.green-japan.com/search_key?$prefecture&keyword=$keyword&page=4')),
+    http.get(Uri.parse(
+        'https://www.green-japan.com/search_key?$prefecture&keyword=$keyword&page=5')),
+    http.get(Uri.parse(
+        'https://www.green-japan.com/search_key?$prefecture&keyword=$keyword&page=6')),
+    http.get(Uri.parse(
+        'https://www.green-japan.com/search_key?$prefecture&keyword=$keyword&page=7')),
+    http.get(Uri.parse(
+        'https://www.green-japan.com/search_key?$prefecture&keyword=$keyword&page=8')),
+    http.get(Uri.parse(
+        'https://www.green-japan.com/search_key?$prefecture&keyword=$keyword&page=9')),
+    http.get(Uri.parse(
+        'https://www.green-japan.com/search_key?$prefecture&keyword=$keyword&page=10')),
+    http.get(Uri.parse(
+        'https://www.green-japan.com/search_key?$prefecture&keyword=$keyword&page=11')),
+    http.get(Uri.parse(
+        'https://www.green-japan.com/search_key?$prefecture&keyword=$keyword&page=12')),
+    http.get(Uri.parse(
+        'https://www.green-japan.com/search_key?$prefecture&keyword=$keyword&page=13')),
+    http.get(Uri.parse(
+        'https://www.green-japan.com/search_key?$prefecture&keyword=$keyword&page=14')),
+    http.get(Uri.parse(
+        'https://www.green-japan.com/search_key?$prefecture&keyword=$keyword&page=15')),
+  ];
+}
 
 final isRefreshingProvider = StateProvider<bool>((ref) => false);
 
